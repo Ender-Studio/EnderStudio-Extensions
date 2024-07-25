@@ -30,8 +30,8 @@
             return {
                 id: "enderKeysPlus",
                 name: "Keys+",
-                color1: "#808080", // Gray color
-                color2: "#404040", // Dark gray color
+                color1: "#647970",
+                color2: "#35413c",
                 blocks: [
                     { opcode: "whenKeyPressed", blockType: Scratch.BlockType.HAT, text: "when [key] key pressed", arguments: { key: { type: Scratch.ArgumentType.STRING, menu: "keys" } } },
                     "---",
