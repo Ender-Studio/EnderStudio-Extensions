@@ -7,7 +7,7 @@
 ( function (Scratch) {
     "use strict"
 
-    const _specialChar = [ "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Digit0", "Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9", "KeyA", "KeyB", "KeyC", "KeyD", "KeyE", "KeyF", "KeyG", "KeyH", "KeyI", "KeyJ", "KeyK", "KeyL", "KeyM", "KeyN", "KeyO", "KeyP", "KeyQ", "KeyR", "KeyS", "KeyT", "KeyU", "KeyV", "KeyW", "KeyX", "KeyY", "KeyZ", "Backquote", "Minus", "Equal", "BracketLeft", "BracketRight", "Backslash", "Semicolon", "Quote", "Comma", "Period", "Slash" ]
+    const _convertToValue = [ "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Digit0", "Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9", "KeyA", "KeyB", "KeyC", "KeyD", "KeyE", "KeyF", "KeyG", "KeyH", "KeyI", "KeyJ", "KeyK", "KeyL", "KeyM", "KeyN", "KeyO", "KeyP", "KeyQ", "KeyR", "KeyS", "KeyT", "KeyU", "KeyV", "KeyW", "KeyX", "KeyY", "KeyZ", "Backquote", "Minus", "Equal", "BracketLeft", "BracketRight", "Backslash", "Semicolon", "Quote", "Comma", "Period", "Slash" ]
     
     const formatName = (name) => { 
         const n = String(name).replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase().replace("meta", "windows key")
@@ -31,7 +31,7 @@
                 id: "enderKeysPlus",
                 name: "Keys+",
                 color1: "#647970",
-                color2: "#35413c",
+                color2: "#4d5e56",
                 blocks: [
                     { opcode: "whenKeyPressed", blockType: Scratch.BlockType.HAT, text: "when [key] key pressed", arguments: { key: { type: Scratch.ArgumentType.STRING, menu: "keys" } } },
                     "---",
@@ -50,8 +50,8 @@
 
         isKeyPressed(args) { const key = this.currentkeyPressed(); return args.key == "any"? key != "None" : args.key === key }
 
-        currentKeyPressed() { const key = this._currentKey; return _specialChar.includes(key) ? this._currentKeyValue : key === "None" ? key : formatName(key) }
-        currentKeyProperty(args) { return args.mode == "code" ? this._currentKey : this._currentKeyValue }
+        currentKeyPressed() { const key = this._currentKey; return _convertToValue.includes(key) ? this._currentKeyValue : key === "None" ? key : formatName(key) }
+        currentKeyProperty(args) { const out = args.mode == "code" ? this._currentKey : this._currentKeyValue; return out == "None" ? "No Keys Pressed" : out }
         
     }
 
