@@ -55,5 +55,5 @@
         
     }
 
-    Scratch.extensions.register(new KeysPlus())
+    Scratch.extensions.register(new enderKeysPlus())
 } ) (Scratch)
