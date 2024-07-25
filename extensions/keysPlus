@@ -9,6 +9,8 @@
 
     if (!Scratch.extensions.unsandboxed) throw new Error("Keys+ must run unsandboxed")
 
+    const createLabel = (text) => ({ blockType: Scratch.BlockType.LABEL, text: text })
+
     const _convertToValue = [ "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Digit0", "Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9", "KeyA", "KeyB", "KeyC", "KeyD", "KeyE", "KeyF", "KeyG", "KeyH", "KeyI", "KeyJ", "KeyK", "KeyL", "KeyM", "KeyN", "KeyO", "KeyP", "KeyQ", "KeyR", "KeyS", "KeyT", "KeyU", "KeyV", "KeyW", "KeyX", "KeyY", "KeyZ", "Backquote", "Minus", "Equal", "BracketLeft", "BracketRight", "Backslash", "Semicolon", "Quote", "Comma", "Period", "Slash" ]
     const _hasMultiple = [ "control", "shift", "alt", "meta", "arrow"]
 
@@ -38,14 +40,15 @@
                 color1: "#647970",
                 color2: "#4d5e56",
                 blocks: [
-                    { opcode: "whenKeyPressed", blockType: Scratch.BlockType.HAT, text: "when [key] key hit", arguments: { key: { type: Scratch.ArgumentType.STRING, menu: "keys" } } },
+                    { opcode: "whenKeyHit", blockType: Scratch.BlockType.HAT, text: "when [key] key hit", arguments: { key: { type: Scratch.ArgumentType.STRING, menu: "keys" } } },
                     "---",
                     { opcode: "isKeyPressed", blockType: Scratch.BlockType.BOOLEAN, text: "is [key] key pressed?", arguments: { key: { type: Scratch.ArgumentType.STRING, menu: "keys" } } },
                     "---",
                     { opcode: "currentKeyPressed", blockType: Scratch.BlockType.REPORTER, text: "current key pressed" },
                     { opcode: "currentKeyProperty", blockType: Scratch.BlockType.REPORTER, text: "current key [property]", disableMonitor: true, arguments: { property: { type: Scratch.ArgumentType.STRING, menu: "property" } } },
                     "---",
-                    { opcode: "keysPressed", blockType: Scratch.BlockType.REPORTER, text: "keys pressed" }
+                    { opcode: "keysPressed", blockType: Scratch.BlockType.REPORTER, text: "keys pressed" },
+                    createLabel("Keybinding"),
                 ],
                 menus: {
                     keys: { acceptReporters: true, items: [ "space", "up arrow", "down arrow", "right arrow", "left arrow", "backspace", "enter", "any", "right shift", "left shift", "right control", "left control", "right alt", "left alt", "right windows key", "left windows key", "context menu", "escape", "tab", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "`", "~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "+", "=", "[", "]", "{", "}", "\\", "|", ";", ":", "'", "\"", ",", ".", "/", "?", "<", ">", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "caps lock", "scroll lock", "num lock", "numpad: divide", "numpad: multiply", "numpad: subtract", "numpad: add", "numpad: 0", "numpad: 1", "numpad: 2", "numpad: 3", "numpad: 4", "numpad: 5", "numpad: 6", "numpad: 7", "numpad: 8", "numpad: 9", "numpad: decimal", "numpad: enter" ] },
@@ -55,7 +58,7 @@
         }
 
         keysPressed() { return JSON.stringify(Object.keys(keysPressed)) }
-        whenKeyPressed(args) { const key = Object.keys(keysPressed); return args.key === "any" ? keys.length !== 0 : key.includes(args.key) }
+        whenKeyHit(args) { const key = Object.keys(keysPressed); return args.key === "any" ? keys.length !== 0 : key.includes(args.key) }
 
         isKeyPressed(args) { const key = Object.keys(keysPressed); return args.key === "any" ? keys.length !== 0 : key.includes(args.key) }
 
