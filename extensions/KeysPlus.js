@@ -23,12 +23,12 @@
     const parseKeys = (_keys) => { const keys = /^\[.*\]$/.test(_keys) ? _keys : `[${_keys}]`; try { return JSON.parse(keys) } catch { return [] } };
     const getKeysPressed = () => Object.keys(_keysPressed);
 
-    const refresh = () => { if (Object.keys(__keysPressed).length === 0) _keysPressed = {} }
+    const refresh = () => { if (Object.keys(__keysPressed).length === 0) _keysPressed = {}; else if (!_keyPressed["any"]) _keysPressed["any"] = [ Date.now(), "N/A", "N/A" ] }
     
     class enderKeysPlus {
         constructor() {
             runtime.on("BEFORE_EXECUTE", () => { runtime.startHats("enderKeysPlus_eventWhileKeyPressed"); runtime.startHats("enderKeysPlus_eventWhileKeyPressedMultiple")})
-            window.addEventListener("keydown", (event) => { __keysPressed[event.key] = true; if (!_keysPressed[format(event.code, event.key)]) _keysPressed[format(event.code, event.key)] = [ Date.now(), event.code, event.key] ; refresh() })
+            window.addEventListener("keydown", (event) => { __keysPressed[event.key] = true; __keysPressed[event.key] = true; if (!_keysPressed[format(event.code, event.key)]) _keysPressed[format(event.code, event.key)] = [ Date.now(), event.code, event.key] ; refresh() })
             window.addEventListener("keyup", (event) => { delete __keysPressed[event.key]; delete _keysPressed[format(event.code, event.key)]; refresh() })
         };
         getInfo() {
@@ -38,8 +38,8 @@
                 color1: "#647970",
                 color2: "#4D5E56",
                 blocks: [
-                    { opcode: "eventWhileKeyPressed", blockType: Scratch.BlockType.HAT, text: "while [key] key is pressed", arguments: { key: { type: Scratch.ArgumentType.STRING, menu: "keys" } } },
-                    { opcode: "eventWhileKeyPressedMultiple", blockType: Scratch.BlockType.HAT, text: "while ［[keys]］ keys is pressed [mode]", arguments: { keys: { type: Scratch.ArgumentType.STRING }, mode: { type: Scratch.ArgumentType.STRING, menu: "returnMode" } } },
+                    { opcode: "eventWhileKeyPressed", blockType: Scratch.BlockType.HAT, text: "while [key] key is pressed", isEdgeActivated: false, arguments: { key: { type: Scratch.ArgumentType.STRING, menu: "keys" } } },
+                    { opcode: "eventWhileKeyPressedMultiple", blockType: Scratch.BlockType.HAT, text: "while ［[keys]］ keys is pressed [mode]", isEdgeActivated: false, arguments: { keys: { type: Scratch.ArgumentType.STRING }, mode: { type: Scratch.ArgumentType.STRING, menu: "returnMode" } } },
                     { opcode: "eventWhenKeyPressed", blockType: Scratch.BlockType.HAT, text: "when [key] key is pressed", arguments: { key: { type: Scratch.ArgumentType.STRING, menu: "keys" } } },
                     { opcode: "eventWhenKeyPressedMultiple", blockType: Scratch.BlockType.HAT, text: "when ［[keys]］ keys is pressed [mode]", arguments: { keys: { type: Scratch.ArgumentType.STRING }, mode: { type: Scratch.ArgumentType.STRING, menu: "returnMode" } } },
                     "---",
@@ -69,15 +69,14 @@
         eventWhenKeyPressed(args) { return getKeysPressed().includes(args.key) }
         eventWhenKeyPressedMultiple(args) { const k = parseKeys(args.keys); return args.mode === "together & in order" ? this._isKeysPressed(k, true) : this._isKeysPressed(k, false) }
 
-        keyPressedAny() { return getKeysPressed().length !== 0 }
-        isKeyPressed(args) { return args.key === "any" ? this.keyPressedAny : getKeysPressed().includes(args.key) }
+        isKeyPressed(args) { return getKeysPressed().includes(args.key) }
         isKeyPressedMultiple(args) { const k = parseKeys(args.keys); return args.mode === "together & in order" ? this._isKeysPressed(k, true) === String(k) : args.mode === "together & ignore order" ? this._isKeysPressed(k, false) : JSON.stringify(k.map(key => p.includes(key))); };
 
         keyPressedAll() { return JSON.stringify(getKeysPressed()); }
         keyPressedCurrent() { return getKeysPressed().reverse()[0] || "None" };
         keyPressedProperty(args) { const key = _keysPressed[getKeysPressed().reverse()[0]]; return !key ? (args.property === "name" ? "None" : "N/A") : args.property === "name" ? format(key[1], key[2]) : args.property === "time" ? (Date.now() - key[0]) / 1000 : args.property === "code" ? key[1] : key[2]; }
 
-        keyPressedTime(args) { return (Date.now() - _keysPressed[args.key][0]) / 1000 || 0 };
+        keyPressedTime(args) { if (getKeysPressed().includes(args.key)) return (Date.now() - _keysPressed[args.key][0]) / 1000; else return 0 };
         keyPressedMultipleTime(args) { return JSON.stringify(parseKeys(args.keys).map(key => (Date.now() - _keysPressed[key][0]) / 1000 || 0)) }
     };
     Scratch.extensions.register(new enderKeysPlus());
