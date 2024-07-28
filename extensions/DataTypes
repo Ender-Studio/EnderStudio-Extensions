@@ -31,9 +31,9 @@
                     { opcode: "undefined", blockType: Scratch.BlockType.REPORTER, text: "undefined", disableMonitor: true },
                     { blockType: Scratch.BlockType.LABEL, text: "Scratch" },
                     { opcode: "scratchTypeOf", blockType: Scratch.BlockType.REPORTER, text: "［Scratch］type of [input]", arguments: { input: { type: Scratch.ArgumentType.STRING } } },
-                    { opcode: "scratchCastToString", blockType: Scratch.BlockType.REPORTER, text: "［Scratch］String [input]", arguments: { input: { type: Scratch.ArgumentType.STRING } } },
-                    { opcode: "scratchCastToNumber", blockType: Scratch.BlockType.REPORTER, text: "［Scratch］Number [input]", arguments: { input: { type: Scratch.ArgumentType.STRING } } },
-                    { opcode: "scratchCastToBoolean", blockType: Scratch.BlockType.REPORTER, text: "［Scratch］Boolean [input]", arguments: { input: { type: Scratch.ArgumentType.STRING } } },
+                    { opcode: "scratchCastToString", blockType: Scratch.BlockType.REPORTER, text: "［Scratch］cast to string [input]", arguments: { input: { type: Scratch.ArgumentType.STRING } } },
+                    { opcode: "scratchCastToNumber", blockType: Scratch.BlockType.REPORTER, text: "［Scratch］cast to number [input]", arguments: { input: { type: Scratch.ArgumentType.STRING } } },
+                    { opcode: "scratchCastToBoolean", blockType: Scratch.BlockType.REPORTER, text: "［Scratch］cast to boolean [input]", arguments: { input: { type: Scratch.ArgumentType.STRING } } },
                 ]
             }
         }
