@@ -46,10 +46,10 @@
         castToSymbol(args) { return Symbol(args.input); };
         undefined() { return undefined }
         
-        scratchTypeOf(args) { if (["string", "number", "boolean"].includes(typeof args.input)) return typeof args.input; return "undefined"; };
-        scratchCastToString(args) { Scratch.Cast.toString(args.input); };
-        scratchCastToNumber(args) { Scratch.Cast.toNumber(args.input); };
-        scratchCastToBoolean(args) { Scratch.Cast.toBoolean(args.input); };
+        scratchTypeOf(args) { return ["string", "number", "boolean"].includes(typeof args.input)? typeof args.input : "undefined"; };
+        scratchCastToString(args) { return Scratch.Cast.toString(args.input); };
+        scratchCastToNumber(args) { return Scratch.Cast.toNumber(args.input); };
+        scratchCastToBoolean(args) { return Scratch.Cast.toBoolean(args.input); };
     }
     Scratch.extensions.register(new enderDataTypes())
 })(Scratch)
