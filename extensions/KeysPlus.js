@@ -1,6 +1,6 @@
 // Name : Keys+
 // ID : enderKeysPlus
-// Description : more powerful key sensing blocks
+// Description : more powerful key sensing blocks.
 // Version : 1.0
 // Author : Ender-Studio
 // License : MIT
