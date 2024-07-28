@@ -72,7 +72,7 @@
         isKeyPressed(args) { return getKeysPressed().includes(args.key) }
         isKeyPressedMultiple(args) { const k = parseKeys(args.keys); return args.mode === "together & in order" ? this._isKeysPressed(k, true) : args.mode === "together & ignore order" ? this._isKeysPressed(k, false) : JSON.stringify(_parseKeys(args.keys).map(key => getKeysPressed().includes(key))); };
 
-        keyPressedAll() { return JSON.stringify(getKeysPressed()); }
+        keyPressedAll() { return JSON.stringify(getKeysPressed().slice(1)); }
         keyPressedCurrent() { return getKeysPressed().reverse()[0] || "None" };
         keyPressedProperty(args) { const key = _keysPressed[getKeysPressed().reverse()[0]]; return !key ? (args.property === "name" ? "None" : "N/A") : args.property === "name" ? format(key[1], key[2]) : args.property === "time" ? (Date.now() - key[0]) / 1000 : args.property === "code" ? key[1] : key[2]; }
 
