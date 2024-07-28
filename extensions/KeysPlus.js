@@ -1,12 +1,10 @@
 // Name : Keys+
 // ID : enderKeysPlus
-// Description : /* Placeholder */
+// Description : more powerful key sensing blocks
 // Version : 1.0
 // Author : Ender-Studio
 // License : MIT
 
-
-// ［］
 (function(Scratch){
     "use strict";
 
