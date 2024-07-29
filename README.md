@@ -1,8 +1,9 @@
 # turbowarp-extensions
+## Ender-Studio's Extensions
 this is where i will upload my extensions
+### Issues
+report any issues here
+https://github.com/Ender-Studio/turbowarp-extensions/issues
 
-plz report any issues here https://github.com/Ender-Studio/turbowarp-extensions/issues
-
-
-#License
-By default, files in this repository are licensed under the (LGPLv3)[licenses/lgpl-3.0] license. However, there are exceptions. Files that are under a different license will have a license header at the top of their code.
+# License
+__All Extensions__ in this Repository use the __MIT and LGPL-3.0 Licences__
