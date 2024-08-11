@@ -35,7 +35,7 @@
                     { opcode: "isString", blockType: Scratch.BlockType.BOOLEAN, text: "is [text] text?", arguments: { text: { type: Scratch.ArgumentType.STRING, defaultValue: "apple" } } },
                     "---",
                     { opcode: "textToString", blockType: Scratch.BlockType.REPORTER, text: "[text] as string", arguments: { text: { type: Scratch.ArgumentType.STRING } } },
-                    { opcode: "stringToText", blockType: Scratch.BlockType.REPORTER, text: "[text] as text", arguments: { text: { type: Scratch.ArgumentType.STRING } } },
+                    { opcode: "stringToText", blockType: Scratch.BlockType.REPORTER, text: "\"[text]\"  as text", arguments: { text: { type: Scratch.ArgumentType.STRING } } },
                     "---",
                     { opcode: "textLettersFromTo", blockType: Scratch.BlockType.REPORTER, text: "letters [from] to [to] of [text]", arguments: {  text: { type: Scratch.ArgumentType.STRING, defaultValue: "Hello World!" }, from: { type: Scratch.ArgumentType.NUMBER, defaultValue: 1}, to: { type: Scratch.ArgumentType.NUMBER, defaultValue: 5 } } },
                     { opcode: "textItemSplitBy", blockType: Scratch.BlockType.REPORTER, text: "item [item] of [text] split by [delimiter]", arguments: { text: { type: Scratch.ArgumentType.STRING, defaultValue: "apple|banana" }, item: { type: Scratch.ArgumentType.NUMBER, defaultValue: 2 }, delimiter: { type: Scratch.ArgumentType.STRING, defaultValue: "|" } } },
@@ -94,8 +94,8 @@
             };
         }
         textToString(args) { return JSON.stringify([String(args.text)]).slice(1, -1) }
-        stringToText(args) { try { const text = String(args.text); return /^".*"$/.test(text) ? JSON.parse(text) : ""; } catch { return ""; }; };
-        
+        stringToText(args) { try { const text = String(args.text); return JSON.parse(/^".*"$/.test(text) ? text : `"${text}"`) } catch { return ""; }; };
+
         textForLetter(args, util) { const text = String(args.text), frame = util.thread.stackFrames[0]; util.stackFrame.index = util.stackFrame.index || 0; if (util.stackFrame.index < text.length) { frame.enderTextLetter = text[util.stackFrame.index]; frame.enderTextIndex = ++util.stackFrame.index; util.startBranch(1, true); }; };
         textForLetterGet(args, util) { return util.thread.stackFrames[0].enderTextLetter || ""; };
         textForLetterIndex(args, util) { return (util.thread.stackFrames[0].enderTextIndex || 0); };
