@@ -119,6 +119,73 @@
                         blockType: Scratch.BlockType.REPORTER,
                         text: "hitbox"
                     },
+                    createLabel("Sensing", Scratch.TargetType.SPRITE),
+                    { 
+                        filter: [Scratch.TargetType.SPRITE],
+                        opcode: "isTouching",
+                        blockType: Scratch.BlockType.BOOLEAN,
+                        text: "is touching [target] ?",
+                        arguments: {
+                            target: { type: Scratch.ArgumentType.STRING, menu: "targets" }
+                        },
+                        hideFromPalette: inputMode !== 0
+                    },
+                    { 
+                        filter: [Scratch.TargetType.SPRITE],
+                        opcode: "_isTouching",
+                        blockType: Scratch.BlockType.BOOLEAN,
+                        text: "is touching [targets] ?",
+                        arguments: {
+                            targets: { type: Scratch.ArgumentType.STRING, defaultValue: "[\"Sprte1\", \"Sprite2\"]" }
+                        },
+                        hideFromPalette: inputMode !== 1
+                    },
+                    { 
+                        filter: [Scratch.TargetType.SPRITE],
+                        opcode: "isTouchingGroup",
+                        blockType: Scratch.BlockType.BOOLEAN,
+                        text: "is touching [group] ?",
+                        arguments: {
+                            group: { type: Scratch.ArgumentType.STRING, defaultValue: "group" }
+                        },
+                        hideFromPalette: inputMode !== 2
+                    },
+                    { 
+                        filter: [Scratch.TargetType.SPRITE],
+                        opcode: "isSafeSpot",
+                        blockType: Scratch.BlockType.BOOLEAN,
+                        text: "is x: [x] y: [y] safe from touching [target] ?",
+                        arguments: {
+                            x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+                            y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+                            target: { type: Scratch.ArgumentType.STRING, menu: "targets" }
+                        },
+                        hideFromPalette: inputMode !== 0
+                    },
+                    { 
+                        filter: [Scratch.TargetType.SPRITE],
+                        opcode: "_isSafeSpot",
+                        blockType: Scratch.BlockType.BOOLEAN,
+                        text: "is x: [x] y: [y] safe from touching [targets] ?",
+                        arguments: {
+                            x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+                            y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+                            targets: { type: Scratch.ArgumentType.STRING, defaultValue: "[\"Sprte1\", \"Sprite2\"]" }
+                        },
+                        hideFromPalette: inputMode !== 1
+                    },
+                    { 
+                        filter: [Scratch.TargetType.SPRITE],
+                        opcode: "isSafeSpotGroup",
+                        blockType: Scratch.BlockType.BOOLEAN,
+                        text: "is x: [x] y: [y] safe from touching [group] ?",
+                        arguments: {
+                            x: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+                            y: { type: Scratch.ArgumentType.NUMBER, defaultValue: 0 },
+                            group: { type: Scratch.ArgumentType.STRING, defaultValue: "group" }
+                        },
+                        hideFromPalette: inputMode !== 2
+                    },
                     createLabel("Motion", Scratch.TargetType.SPRITE),
                     {
                         filter: [Scratch.TargetType.SPRITE],
@@ -371,6 +438,37 @@
         hitboxReset(args, util) { util.target.hitbox = undefined }
         hitboxGet(args, util) { return util.target.hitbox ?? "" }
         // Motion
+        _isTouching(args, util) {
+            return parse(args.targets).some(target => util.target.isTouchingObject(target))
+        }
+        isTouching(args, util) {
+            return this._isTouching({ targets: [args.target] }, util)
+        }
+        isTouchingGroup(args, util) {
+            return this._isTouching({ targets: spriteGroups[args.group] }, util)
+        }
+        _isSafeSpot(args, util) {
+            const self = util.target,
+                  targets = parse(args.targets),
+                  x = self.x,
+                  y = self.y,
+                  tx = args.x,
+                  ty = args.y,
+                  defStyle = self.rotationStyle,
+                  defCostume = self.currentCostume;
+            if (self.hitbox !== undefined) { self.setRotationStyle("don't rotate"); self.setCostume(self.getCostumeIndexByName(self.hitbox)) };
+            self.setXY(tx, ty)
+            const result = targets.some(target => self.isTouchingObject(target))
+            self.setXY(x, y)
+            if (self.hitbox !== undefined) { self.setRotationStyle(defStyle); self.setCostume(defCostume) }
+            return !result
+        }
+        isSafeSpot(args, util) {
+            return this._isSafeSpot({ targets: [args.target], x: args.x, y: args.y }, util)
+        }
+        isSafeSpotGroup(args, util) {
+            return this._isSafeSpot({ targets: args.targets, x: args.x, y: args.y }, util)
+        }
         _changeXBy(args, util) {
             const self = util.target, targets = parse(args.targets),
                   tx = Scratch.Cast.toNumber(args.x),
@@ -382,10 +480,11 @@
             if (self.hitbox !== undefined) { self.setRotationStyle("don't rotate"); self.setCostume(self.getCostumeIndexByName(self.hitbox)) };
             for (let i = 0; i < intTX; i++) {
                 self.setXY(self.x + (1 * sign), self.y);
-                if (targets.some(target => self.isTouchingObject(target))) { return self.setXY(self.x - (1 * sign), self.y); };
+                if (targets.some(target => self.isTouchingObject(target))) { self.setXY(self.x - (1 * sign), self.y); break; };
             };
             if (self.hitbox !== undefined) { self.setRotationStyle(defStyle); self.setCostume(defCostume) };
             self.setXY(self.x + (tx % intTX), self.y);
+            if (targets.some(target => self.isTouchingObject(target))) { self.setXY(self.x - (tx % intTX), self.y) }
         }
         _changeYBy(args, util) {
             const self = util.target, targets = parse(args.targets),
@@ -402,6 +501,7 @@
             };
             if (self.hitbox !== undefined) { self.setRotationStyle(defStyle); self.setCostume(defCostume) };
             self.setXY(self.x, self.y + (ty % intTY));
+            if (targets.some(target => self.isTouchingObject(target))) { self.setXY(self.x, self.y - (ty % intTY)) }
         }
         _changeXYBy(args, util) { this._changeXBy({ x: args.x, targets: args.targets }, util); this._changeYBy({ y: args.y, targets: args.targets }, util); }
         _moveAngle(args, util) {
@@ -448,8 +548,8 @@
                 if (target.isOriginal) {
                     const targetName = target.getName();
                     if (targetName === self) {
-                        sprites.unshift({ text: "this sprite", value: targetName }); }
-                        else { sprites.push({ text: targetName, value: targetName }); }
+                        sprites.unshift({ text: "myself", value: targetName }); }
+                    else { sprites.push({ text: targetName, value: targetName }); }
                 }
             }
             if (sprites.length > 0) { return sprites; }
