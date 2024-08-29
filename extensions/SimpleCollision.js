@@ -1,4 +1,4 @@
-// Name : Simple Collision
+// Name : Lazy Collision
 // ID : enderSimpleCollision
 // Description : collision made easier
 // Version : 1.0
@@ -22,7 +22,7 @@
         getInfo() {
             return {
                 id: "enderSimpleCollision",
-                name: "Simple Collision",
+                name: "Lazy Collision",
                 color1: "#4c97ff",
                 color2: "#4280d7",
                 color3: "#3373cc",
